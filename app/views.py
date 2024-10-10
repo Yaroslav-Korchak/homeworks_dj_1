@@ -29,8 +29,21 @@ def time_view(request):
     return HttpResponse(msg)
 
 
+# def workdir_view(request):
+#     workdir = os.getcwd()
+#     content = os.listdir(workdir)
+#     formatted_content = "<br>".join(content)
+#     return HttpResponse(f"Содержимое рабочей директории:<br>{formatted_content}")
+
 def workdir_view(request):
-    workdir = os.getcwd()
-    content = os.listdir(workdir)
-    formatted_content = "<br>".join(content)
+    try:
+        workdir = os.getcwd()
+        content = os.listdir(workdir)
+        # Форматируем список файлов и директорий в HTML
+        formatted_content = "<ul>" + "".join(f"<li>{item}</li>" for item in content) + "</ul>"
+    except FileNotFoundError:
+        formatted_content = "Рабочая директория не найдена."
+    except PermissionError:
+        formatted_content = "Нет доступа к рабочей директории."
+
     return HttpResponse(f"Содержимое рабочей директории:<br>{formatted_content}")
